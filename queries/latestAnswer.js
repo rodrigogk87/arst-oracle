@@ -9,13 +9,13 @@ const consumerAbi = [
 ];
 
 async function main() {
-  const { ETH_RPC_URL, CONSUMER_ADDRESS } = process.env;
+  const { SEPOLIA_RPC_URL, CONSUMER_ADDRESS } = process.env;
 
-  if (!ETH_RPC_URL || !CONSUMER_ADDRESS) {
-    throw new Error("🚫 Missing ETH_RPC_URL or CONSUMER_ADDRESS in .env");
+  if (!SEPOLIA_RPC_URL || !CONSUMER_ADDRESS) {
+    throw new Error("🚫 Missing SEPOLIA_RPC_URL or CONSUMER_ADDRESS in .env");
   }
 
-  const provider = new ethers.providers.JsonRpcProvider(ETH_RPC_URL);
+  const provider = new ethers.providers.JsonRpcProvider(SEPOLIA_RPC_URL);
   const consumer = new ethers.Contract(CONSUMER_ADDRESS, consumerAbi, provider);
 
   const latestAnswer = await consumer.latestAnswer();
