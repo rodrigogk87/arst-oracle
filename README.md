@@ -35,7 +35,7 @@ Create a `.env` file:
 
 ```env
 PRIVATE_KEY=your_private_key
-ETH_RPC_URL=https://sepolia.infura.io/v3/your_project_id
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/your_project_id
 CONSUMER_ADDRESS=your_deployed_consumer_contract
 SUBSCRIPTION_ID=your_subscription_id
 DON_ID_STRING=your_don_id (e.g., fun-ethereum-sepolia-1)
