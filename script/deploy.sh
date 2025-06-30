@@ -8,15 +8,15 @@ else
   exit 1
 fi
 
-# Verificar que ETH_RPC_URL esté definido
-if [ -z "$ETH_RPC_URL" ]; then
-  echo "❌ Falta la variable ETH_RPC_URL en el .env"
+# Verificar que SEPOLIA_RPC_URL esté definido
+if [ -z "$SEPOLIA_RPC_URL" ]; then
+  echo "❌ Falta la variable SEPOLIA_RPC_URL en el .env"
   exit 1
 fi
 
 # Ejecutar el deployment con Foundry
 forge script script/Deploy.s.sol \
-  --rpc-url "$ETH_RPC_URL" \
+  --rpc-url "$SEPOLIA_RPC_URL" \
   --broadcast \
   --verify \
   -vvvv
