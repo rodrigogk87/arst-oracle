@@ -7,8 +7,9 @@ This project demonstrates how to fetch and store ARS/USDT price data on-chain us
 ## 📦 Includes
 
 * A Solidity consumer contract
-* Node.js scripts to simulate, build, and send requests
-* A script to read on-chain results
+* JavaScript source for ARS/USDT price aggregation
+* Node.js scripts to simulate, build, send requests, and upload secrets
+* A script to query the on-chain result
 
 ---
 
@@ -25,48 +26,40 @@ This project demonstrates how to fetch and store ARS/USDT price data on-chain us
 
 ### Install dependencies
 
-```bash
-npm install
-```
+Install all project dependencies using npm.
 
 ### Configure environment
 
-Create a `.env` file:
+Create a `.env` file and set the following variables:
 
-```env
-PRIVATE_KEY=your_private_key
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/your_project_id
-CONSUMER_ADDRESS=your_deployed_consumer_contract
-SUBSCRIPTION_ID=your_subscription_id
-DON_ID_STRING=your_don_id (e.g., fun-ethereum-sepolia-1)
-```
+- `PRIVATE_KEY`: your wallet private key
+- `MNEMONIC`: your wallet mnemonic (optional)
+- `SEPOLIA_RPC_URL`: Sepolia RPC endpoint (e.g., Infura)
+- `CONSUMER_ADDRESS`: deployed consumer contract address
+- `FUNCTIONS_ROUTER`: Chainlink Functions router address
+- `SUBSCRIPTION_ID`: your subscription ID
+- `DON_ID_STRING`: DON ID string (e.g., fun-ethereum-sepolia-1)
+- `BINANCE_API_KEY`: your Binance API key (used to fetch prices)
 
 ---
 
 ## 🚀 Usage
 
-### Simulate & send request
+### Upload secrets
 
-```bash
-node functions/request-arsusdt.js
-```
+Upload your Binance API key securely to Chainlink DON as a DON-hosted secret before sending requests.
 
-This script will:
+### Simulate
 
-* Simulate your JavaScript source off-chain
-* Build the CBOR payload
-* Send a request via the consumer contract
+Simulate your JavaScript source off-chain locally to verify logic and API responses.
+
+### Send request
+
+Build the CBOR payload and send an on-chain request through your consumer contract.
 
 ### Query on-chain result
 
-```bash
-node queries/latestAnswer.js
-```
-
-This prints:
-
-* ✅ Latest ARS/USDT price stored on-chain
-* 🆔 Last request ID
+Query and print the latest ARS/USDT price stored on-chain and the last request ID.
 
 ---
 
@@ -76,17 +69,19 @@ The Solidity contract (`ARSUSDTConsumer.sol`) is based on `FunctionsClient`.
 
 It includes:
 
-* `latestAnswer`: stores the last fetched price
-* `sendRequest`: sends the Chainlink Functions request
-* `_fulfillRequest`: callback function to decode and store the response
+* `latestAnswer`: stores the last fetched price (scaled)
+* `sendRequest`: sends a Chainlink Functions request
+* `_fulfillRequest`: callback to decode and store the response
+* `isStale`: function to check if on-chain data is stale
 
 ---
 
 ## ⚠️ Notes
 
-* The consumer contract **must be added to your Chainlink Functions subscription** and have enough LINK.
-* Your EOA needs ETH to pay gas fees.
-* Adjust `callbackGasLimit` if your JavaScript source requires more computation.
+* The consumer contract **must be added to your Chainlink Functions subscription** and have enough LINK to cover requests.
+* Your wallet needs Sepolia ETH to pay gas fees.
+* Adjust `callbackGasLimit` if your JavaScript logic is heavy or involves multiple APIs.
+* Binance endpoints may block Chainlink node IPs directly. You may need to set up an intermediary server or fallback to Bluelytics only.
 
 ---
 
