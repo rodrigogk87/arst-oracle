@@ -15,7 +15,7 @@ export default {
   secretsLocation: Location.DONHosted,
   secrets: {
     slotId: 0,             // Slot you chose (0)
-    version: 1751305699    // Your new version
+    version: 1751476064    // Your new version
   },
   args: [],
   bytesArgs: [],
