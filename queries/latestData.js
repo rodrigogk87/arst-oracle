@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 dotenv.config();
 
 const consumerAbi = [
-  "function latestAnswer() view returns (uint256)",
+  "function latestData() view returns (uint256,uint256,uint256)",
   "function lastRequestId() view returns (bytes32)"
 ];
 
@@ -16,12 +16,15 @@ async function main() {
   }
 
   const provider = new ethers.providers.JsonRpcProvider(SEPOLIA_RPC_URL);
-  const consumer = new ethers.Contract(CONSUMER_ADDRESS, consumerAbi, provider);
+  const oracle = new ethers.Contract(CONSUMER_ADDRESS, consumerAbi, provider);
 
-  const latestAnswer = await consumer.latestAnswer();
-  const lastRequestId = await consumer.lastRequestId();
+  const data = await oracle.latestData();
+  const lastRequestId = await oracle.lastRequestId();
 
-  console.log("✅ Latest Answer:", latestAnswer.toString());
+
+  console.log("✅ Latest Answer:", data[0].toString());
+  console.log("✅ Latest requestTimestamp:", data[1].toString());
+  console.log("✅ Latest fulfillTimestamp:", data[2].toString());
   console.log("🆔 Last Request ID:", lastRequestId);
 }
 

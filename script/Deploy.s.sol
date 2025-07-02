@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
 import "forge-std/console2.sol";
-import "../src/ARSUSDTConsumer.sol";
+import "../src/ARSUSDTOracle.sol";
 
 contract Deploy is Script {
     function run() external {
@@ -12,9 +12,9 @@ contract Deploy is Script {
 
         vm.startBroadcast(pk);
 
-        ARSUSDTConsumer consumer = new ARSUSDTConsumer(router);
+        ARSUSDTOracle oracle = new ARSUSDTOracle(router);
 
-        console2.log("ARSUSDTConsumer deployed at:", address(consumer));
+        console2.log("ARSUSDTOracle deployed at:", address(oracle));
 
         vm.stopBroadcast();
     }
