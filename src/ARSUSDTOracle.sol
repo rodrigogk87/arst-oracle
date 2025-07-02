@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "@chainlink/contracts/src/v0.8/functions/v1_3_0/FunctionsClient.sol";
 
-contract ARSUSDTConsumer is FunctionsClient {
+contract ARSUSDTOracle is FunctionsClient {
+    error ARSUSDTOracle__StaleData();
+
     /// @notice Latest ARS/USDT answer (scaled, e.g., 1e8)
     uint256 public latestAnswer;
 
@@ -60,6 +62,39 @@ contract ARSUSDTConsumer is FunctionsClient {
             lastRequestId = requestId;
             lastFulfillTimestamp = block.timestamp; // Store fulfillment time
         }
+    }
+
+    /**
+     * @notice Returns the latest ARS/USDT price if data is considered fresh.
+     * @dev Reverts if the oracle data is stale according to provided freshness parameters.
+     * @param maxAge Maximum allowable age of data (in seconds) since last fulfillment.
+     * @param maxDelay Maximum allowable delay (in seconds) between request and fulfillment.
+     * @return answer The latest ARS/USDT price answer (scaled, e.g., 1e8).
+     */
+    function latestValidData(
+        uint256 maxAge,
+        uint256 maxDelay
+    ) external view returns (uint256 answer) {
+        if (isStale(maxAge, maxDelay)) revert ARSUSDTOracle__StaleData();
+        return latestAnswer;
+    }
+
+    /**
+     * @notice Returns the latest price data along with timestamps, similar to latestRoundData
+     * @return answer Latest ARS/USDT answer
+     * @return requestTimestamp Timestamp when the request was sent
+     * @return fulfillTimestamp Timestamp when the request was fulfilled
+     */
+    function latestData()
+        external
+        view
+        returns (
+            uint256 answer,
+            uint256 requestTimestamp,
+            uint256 fulfillTimestamp
+        )
+    {
+        return (latestAnswer, lastRequestTimestamp, lastFulfillTimestamp);
     }
 
     /**
